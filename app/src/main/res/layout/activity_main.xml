@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.example.custombannerapp.widget.CustomBanner
+        android:id="@+id/customBanner"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+    </com.example.custombannerapp.widget.CustomBanner>
+
+    <Button
+        android:id="@+id/btn_startNextAnimal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启下一页动画"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/btn_startLastAnimal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启上一页动画"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_startNextAnimal" />
+
+    <Button
+        android:id="@+id/btn_stopAnimal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止动画"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_startLastAnimal" />
+</android.support.constraint.ConstraintLayout>
