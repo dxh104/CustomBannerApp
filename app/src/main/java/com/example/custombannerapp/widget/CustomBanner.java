@@ -11,12 +11,16 @@ import android.widget.RelativeLayout;
 import com.example.custombannerapp.R;
 import com.example.custombannerapp.widget.adapter.CustomBannerPagerAdapter;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by XHD on 2020/11/26
  */
 public class CustomBanner<T extends CustomBannerPagerAdapter> extends RelativeLayout {
     private Context mContext;
     private ViewPager mViewPager;
+    //--------优化1
+    private int viewPagerItemCount = Integer.MAX_VALUE / 50;//20亿/50=4000w条目左右，不能设置太大，不然viewpager内部设置页面scrollTo会阻塞
 
     public CustomBanner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,7 +46,25 @@ public class CustomBanner<T extends CustomBannerPagerAdapter> extends RelativeLa
         if (adapter.getmDatas().size() == 0)
             return;
         mViewPager.setAdapter(adapter);
-        selectPages(0, false);
+
+//         自己实现滑动到指定页
+//        setmCurItem(adapter.getmDatas().size() * (part / 2) + 10);
+//        mViewPager.scrollTo((adapter.getmDatas().size() * (part / 2) + 10) * getMeasuredWidth(), 0);
+
+
+        selectPages(0, false);//默认进入中间页
+    }
+
+    private void setmCurItem(int position) {
+        try {
+            Field mCurItem = ViewPager.class.getDeclaredField("mCurItem");
+            mCurItem.setAccessible(true);
+            mCurItem.set(mViewPager, position);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -72,14 +94,14 @@ public class CustomBanner<T extends CustomBannerPagerAdapter> extends RelativeLa
                                 @Override
                                 public void run() {
                                     if (downPage) {
-                                        if (mViewPager.getCurrentItem() == Integer.MAX_VALUE - 1) {//当前页在最后一页，停止翻下页
-                                            stopAnimal = true;
+                                        if (mViewPager.getCurrentItem() == viewPagerItemCount - 1) {//当前页在最后一页，回到中间页
+                                            selectPages(0, false);
                                         } else {//翻下页
                                             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
                                         }
                                     } else {
-                                        if (mViewPager.getCurrentItem() == 0) {//当前页在第一页，停止翻上页
-                                            stopAnimal = true;
+                                        if (mViewPager.getCurrentItem() == 0) {//当前页在第一页，回到中间页
+                                            selectPages(0, false);
                                         } else {//翻上页
                                             mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, true);
                                         }
@@ -106,8 +128,10 @@ public class CustomBanner<T extends CustomBannerPagerAdapter> extends RelativeLa
     private void selectPages(int position, boolean smoothScroll) {
         CustomBannerPagerAdapter adapter = (CustomBannerPagerAdapter) mViewPager.getAdapter();
         if (adapter != null) {
-            int part = Integer.MAX_VALUE / adapter.getmDatas().size();//段数
+            int part = viewPagerItemCount / adapter.getmDatas().size();//段数
+            setmCurItem(adapter.getmDatas().size() * (part / 2) + position);//优化2----解决viewpager内部populate方法for N循环过长
             mViewPager.setCurrentItem(adapter.getmDatas().size() * (part / 2) + position, smoothScroll);
+            mViewPager.requestLayout();
         }
     }
 

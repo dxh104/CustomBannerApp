@@ -22,6 +22,7 @@ public abstract class CustomBannerPagerAdapter<T extends CustomBannerPagerAdapte
     private HashMap<String, View> mViews = new HashMap<>();
     private List<T> mDatas = new ArrayList<>();
     public Context mContext;
+    private int viewPagerItemCount=Integer.MAX_VALUE/50;//20亿/50=4000w条目左右，不能设置太大，不然viewpager内部设置页面scrollTo会阻塞
 
 
     /**
@@ -104,7 +105,7 @@ public abstract class CustomBannerPagerAdapter<T extends CustomBannerPagerAdapte
      */
     @Override
     public int getCount() {
-        return Integer.MAX_VALUE;
+        return viewPagerItemCount;
     }
 
     /**

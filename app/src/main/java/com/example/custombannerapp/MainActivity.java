@@ -3,7 +3,6 @@ package com.example.custombannerapp;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,14 +20,15 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStartNextAnimal;
     private Button btnStartLastAnimal;
     private Button btnStopAnimal;
+    private Button btnClick;
+    private List<MyBannerPagerAdapterData> myBannerPagerAdapterData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        List<MyBannerPagerAdapterData> myBannerPagerAdapterData = getMyBannerPagerAdapterData();
-        customBanner.setCustomBannerPagerAdapter(new MyBannerPagerAdapter(this, myBannerPagerAdapterData));
+        myBannerPagerAdapterData = getMyBannerPagerAdapterData();
     }
 
     @NonNull
@@ -63,16 +63,18 @@ public class MainActivity extends AppCompatActivity {
         btnStartNextAnimal = (Button) findViewById(R.id.btn_startNextAnimal);
         btnStartLastAnimal = (Button) findViewById(R.id.btn_startLastAnimal);
         btnStopAnimal = (Button) findViewById(R.id.btn_stopAnimal);
+        btnClick = (Button) findViewById(R.id.btn_click);
+
         btnStartNextAnimal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customBanner.startTurnPageAnimal(true, 1000);
+                customBanner.startTurnPageAnimal(true, 2000);
             }
         });
         btnStartLastAnimal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customBanner.startTurnPageAnimal(false, 1000);
+                customBanner.startTurnPageAnimal(false, 2000);
 
             }
         });
@@ -80,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 customBanner.stopTurnPageAnimal();
+            }
+        });
+        btnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customBanner.setCustomBannerPagerAdapter(new MyBannerPagerAdapter(MainActivity.this, myBannerPagerAdapterData));
+
             }
         });
     }
