@@ -22,7 +22,7 @@ public abstract class CustomBannerPagerAdapter<T extends CustomBannerPagerAdapte
     private HashMap<String, View> mViews = new HashMap<>();
     private List<T> mDatas = new ArrayList<>();
     public Context mContext;
-    private int viewPagerItemCount=Integer.MAX_VALUE/50;//20亿/50=4000w条目左右，不能设置太大，不然viewpager内部设置页面scrollTo会阻塞
+    private int viewPagerItemCount = Integer.MAX_VALUE / 50;//20亿/50=4000w条目左右，不能设置太大，不然viewpager内部设置页面scrollTo会阻塞
 
 
     /**
@@ -80,6 +80,11 @@ public abstract class CustomBannerPagerAdapter<T extends CustomBannerPagerAdapte
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        position = position % mDatas.size();
+        if (position < 0) {
+            position = mDatas.size() + position;
+        }
+        onViewRecycle((View) object, mDatas.get(position), position);
         container.removeView((View) object);//此处如果移除view，那么container最多只会缓存3个view
     }
 
@@ -125,7 +130,9 @@ public abstract class CustomBannerPagerAdapter<T extends CustomBannerPagerAdapte
      */
     public abstract void onBindData(View view, T data, int position);//绑定数据
 
-    public abstract void setListener(View view,List<T> datas);//设置监听事件
+    public abstract void setListener(View view, List<T> datas);//设置监听事件
+
+    public abstract void onViewRecycle(View view, T data, int position);//可以在回收view时做一些置空操作，回收一些图片之类的操作
 
     public List<T> getmDatas() {
         return mDatas;

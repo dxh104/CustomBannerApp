@@ -3,6 +3,7 @@ package com.example.custombannerapp.adapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,6 +91,12 @@ public class MyBannerPagerAdapter extends CustomBannerPagerAdapter<MyBannerPager
                 }
             });
         }
+    }
+
+    @Override
+    public void onViewRecycle(View view, MyBannerPagerAdapterData data, int position) {
+//        Log.i("----", "onViewRecycle: 回收"+position);
+//        setImageBitmap(null);//置空释放原bitmap引用消耗的内存
     }
 
 
