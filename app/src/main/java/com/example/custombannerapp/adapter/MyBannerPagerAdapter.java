@@ -5,6 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,10 +95,18 @@ public class MyBannerPagerAdapter extends CustomBannerPagerAdapter<MyBannerPager
         }
     }
 
+    //可以做一些回收操作,释放内存
     @Override
     public void onViewRecycle(View view, MyBannerPagerAdapterData data, int position) {
-//        Log.i("----", "onViewRecycle: 回收"+position);
-//        setImageBitmap(null);//置空释放原bitmap引用消耗的内存
+        if (data.getItem_type() == R.layout.item_banner_layout1) {
+            RecyclerView recyclerView = view.findViewById(R.id.rv_news);
+            for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                ViewGroup childViewGroup = (ViewGroup) recyclerView.getChildAt(i);
+                ImageView ivNewsTitle = childViewGroup.findViewById(R.id.iv_newsTitle);
+                if (ivNewsTitle.getDrawable() != null)
+                    ivNewsTitle.setImageBitmap(null);//清除bitmap引用
+            }
+        }
     }
 
 

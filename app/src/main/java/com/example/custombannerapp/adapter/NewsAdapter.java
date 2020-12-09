@@ -1,6 +1,9 @@
 package com.example.custombannerapp.adapter;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import java.util.List;
 public class NewsAdapter extends BaseRecycleAdapter<News> {
     private TextView tvNewsTitle;
     private TextView tvNewsContent;
+    private ImageView ivNewsTitle;
 
     public NewsAdapter(List<News> mDatas) {
         super(mDatas);
@@ -36,6 +40,7 @@ public class NewsAdapter extends BaseRecycleAdapter<News> {
     protected void initView(BaseViewHolder holder) {
         tvNewsTitle = (TextView) holder.getView(R.id.tv_newsTitle);
         tvNewsContent = (TextView) holder.getView(R.id.tv_newsContent);
+        ivNewsTitle = (ImageView) holder.getView(R.id.iv_newsTitle);
     }
 
     @Override
@@ -52,5 +57,13 @@ public class NewsAdapter extends BaseRecycleAdapter<News> {
     protected void bindData(BaseViewHolder holder, int position, News news) {
         tvNewsTitle.setText(news.getNewsTitle());
         tvNewsContent.setText(news.getNewsContent());
+        ivNewsTitle.setImageDrawable(mContext.getDrawable(R.mipmap.ic_launcher));//此处可以glide加载网络图片，本地图片一类的
     }
+
+    //如果recycleView用到复用，也可以做一些回收操作
+    @Override
+    public void onViewRecycled(@NonNull BaseViewHolder holder) {
+        super.onViewRecycled(holder);
+    }
+
 }
